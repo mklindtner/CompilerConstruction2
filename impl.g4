@@ -19,7 +19,8 @@ command : x=ID '=' e=expr ';'	           # Assignment
 
 
 expr	: 
-	expr OP=(MULT|DIV) expr 	# MultDiv
+	MINUS e=expr 				# UnaryMinus
+	| expr OP=(MULT|DIV) expr 	# MultDiv
 	| expr OP=(ADD|MINUS) expr 	# AddSub
 	| x=ID'['i=expr']'			# IDArray
 	| c=FLOAT     	      		# Constant
@@ -36,7 +37,7 @@ condition :
 	  ;  
 
 ID    : ALPHA (ALPHA|NUM)* ;
-FLOAT : '-'? NUM+ ('.' NUM+)? ;
+FLOAT : NUM+ ('.' NUM+)? ;
 
 ALPHA : [a-zA-Z_ÆØÅæøå] ;
 NUM   : [0-9] ;

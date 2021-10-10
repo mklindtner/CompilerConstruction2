@@ -28,8 +28,6 @@ class faux { // collection of non-OO auxiliary functions (currently just error)
     }
 }
 
-
-
 class Value {
     public JavaType javaType;
     public Double d;
@@ -154,10 +152,11 @@ class Sequence extends Command {
         c1.eval(env);
         c2.eval(env);
     }
+
     public JavaType typecheck(Environment env) {
         c1.typecheck(env);
         c2.typecheck(env);
-        return JavaType.BOOLTYPE; //this is fucked
+        return JavaType.BOOLTYPE; // this is fucked
     }
 }
 
@@ -215,16 +214,15 @@ class AssignArray extends Command {
         Value accesor_value = accessor.eval(env);
         Value action_value = action.eval(env);
         Double idx = accesor_value.d;
-        
+
         int foo = idx.intValue();
         String arrayIndex = id + Integer.toString(foo);
         JavaType arrayType = env.getVariable(arrayIndex).javaType;
-        if (arrayType != action_value.javaType)
-        {
+        if (arrayType != action_value.javaType) {
             faux.error("ArrayType is not equal to assignment Type");
             return null;
         }
-        return action_value.javaType;        
+        return action_value.javaType;
     }
 }
 
@@ -247,7 +245,7 @@ class IDArray extends Expr {
     public JavaType typecheck(Environment env) {
         System.out.println("---Typecheck IDArray---");
         Value v = accessor.eval(env);
-        if(v.javaType.equals(JavaType.DOUBLETYPE)){
+        if (v.javaType.equals(JavaType.DOUBLETYPE)) {
             faux.error("access type must be double");
             return null;
         }
@@ -309,8 +307,7 @@ class Unequal extends Condition {
         System.out.println("---Typecheck Unequal---");
         JavaType t1 = e1.eval(env).javaType;
         JavaType t2 = e2.eval(env).javaType;
-        if(t1 != t2)
-        {
+        if (t1 != t2) {
             faux.error("Expressions must be of same type");
         }
         return t1;
@@ -371,15 +368,15 @@ class Compare extends Condition {
 
         return null;
     }
+
     public JavaType typecheck(Environment env) {
         System.out.println("---Typecheck compare---");
         JavaType t1 = e1.eval(env).javaType;
         JavaType t2 = e2.eval(env).javaType;
-        if(t1 != t2)
-        {
+        if (t1 != t2) {
             faux.error("Expressions must be of same type");
         }
-        return t1;        
+        return t1;
     }
 }
 
@@ -396,7 +393,7 @@ class Variable extends Expr {
 
     public JavaType typecheck(Environment env) {
         System.out.println("---Typecheck variable---");
-        return this.eval(env).javaType;        
+        return this.eval(env).javaType;
     }
 
 }
@@ -440,16 +437,14 @@ class AndCondition extends Condition {
         return e1.eval(env).equals(e2.eval(env));
     }
 
-    public JavaType typecheck(Environment env)
-    {
+    public JavaType typecheck(Environment env) {
         System.out.println("---Typecheck andCondition---");
         Value v1 = new Value(e1.eval(env));
         Value v2 = new Value(e2.eval(env));
-        if(v1.javaType != v2.javaType)
-        {
+        if (v1.javaType != v2.javaType) {
             faux.error("AndCondition must have similar types");
         }
-        return v1.javaType;       
+        return v1.javaType;
     }
 }
 
@@ -465,16 +460,14 @@ class OrCondition extends Condition {
         return c1.eval(env) || (c2.eval(env));
     }
 
-    public JavaType typecheck(Environment env)
-    {
+    public JavaType typecheck(Environment env) {
         System.out.println("---Typecheck orCondition---");
         Value v1 = new Value(c1.eval(env));
         Value v2 = new Value(c2.eval(env));
-        if(v1.javaType != v2.javaType)
-        {
+        if (v1.javaType != v2.javaType) {
             faux.error("AndCondition must have similar types");
         }
-        return v1.javaType;       
+        return v1.javaType;
     }
 }
 
@@ -489,9 +482,32 @@ class NotCondition extends Condition {
         return !c1.eval(env);
     }
 
-    public JavaType typecheck(Environment env)
-    {
+    public JavaType typecheck(Environment env) {
         System.out.println("---Typecheck NotCondition---");
-        return new Value(c1.eval(env)).javaType;       
+        return new Value(c1.eval(env)).javaType;
+    }
+}
+
+class UnaryMinus extends Expr {
+    Expr e;
+
+    UnaryMinus(Expr e)
+    {
+        this.e = e;
+    }
+
+    public Value eval(Environment env) {
+        System.out.println("evaluating unuary minus");
+        Value v = e.eval(env);
+        return new Value(-1 * v.d);
+    }
+
+    public JavaType typecheck(Environment env) {
+        Value v = e.eval(env);
+        if(v.javaType != JavaType.DOUBLETYPE)
+        {
+            faux.error("Unary expr must have minus");
+        }
+        return v.javaType;
     }
 }

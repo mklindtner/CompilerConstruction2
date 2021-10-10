@@ -5,7 +5,7 @@ n=49;
 k=6;
 result=1;
 
-while(n!=k && k!=0){
+while(n!=k and k!=0){
   result=result*n/k;
   n=n-1;
   k=k-1;

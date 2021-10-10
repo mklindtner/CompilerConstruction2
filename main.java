@@ -34,12 +34,11 @@ public class main {
 		// and parse anything from the grammar for "start"
 		ParseTree parseTree = parser.start();
 		
-		AstMaker astMaker = new AstMaker();
-		AST ast=astMaker.visit(parseTree);
+		//AstMaker astMaker = new AstMaker();
+		//AST ast=astMaker.visit(parseTree);
 
-		System.out.println("Typecheck...\n" + ast.typecheck(new Environment()));
-		// Construct an interpreter and run it on the parse tree
-		// Interpreter interpreter = new Interpreter();
+		//System.out.println("Typecheck...\n" + ast.typecheck(new Environment()));
+		// ast.visit(parseTree);
 		Command p = (Command) new AstMaker().visit(parseTree);
 		p.eval(new Environment());
 	}
@@ -190,5 +189,11 @@ class AstMaker extends AbstractParseTreeVisitor<AST> implements implVisitor<AST>
 		System.out.print("---visiting NotCondition----");
 		Condition c1 = (Condition) visit(ctx.c);
 		return new NotCondition(c1);
+	}
+
+	public AST visitUnaryMinus(implParser.UnaryMinusContext ctx){
+		System.out.println("---visitng UnaryCondition---");		
+		Expr e1 = (Expr)visit(ctx.e);
+		return new UnaryMinus(e1);
 	}
 }
