@@ -196,4 +196,12 @@ class AstMaker extends AbstractParseTreeVisitor<AST> implements implVisitor<AST>
 		Expr e1 = (Expr)visit(ctx.e);
 		return new UnaryMinus(e1);
 	}
+
+	public AST visitGreaterThen(implParser.GreaterThenContext ctx) {
+		System.out.println("---visiting GreaterThen---");
+		Expr e1 = (Expr)visit(ctx.condition(0));
+		Expr e2 = (Expr)visit(ctx.condition(1));
+
+		return new GreaterThen(e1,e2);
+	}
 }

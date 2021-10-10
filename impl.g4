@@ -8,11 +8,11 @@ program : c=command                      # SingleCommand
 	| '{' cs+=command* '}'           	 # MultipleCommands
 	;
 	
-command : x=ID '=' e=expr ';'	           # Assignment
-	| 'output' e=expr ';'            	   # Output
-    | 'while' '('c=condition')' p=program  # WhileLoop
-	| 'if' c=condition 'then' p=program    #IfThen
-	| x=ID'['i=expr']''='v=expr ';'   	   #AssignArray		
+command : x=ID '=' e=expr ';'	           				# Assignment
+	| 'output' e=expr ';'            	   				# Output
+    | 'while' '('c=condition')' p=program   			# WhileLoop
+	| 'if' '('c=condition')' p=program    				#IfThen
+	| x=ID'['i=expr']''='v=expr ';'   	   				#AssignArray		
 	| 'for' '('x=ID'='n1=FLOAT'..'n2=expr')' p=program  #ForLoop
 	; //a[1] = 2;
 
@@ -32,6 +32,7 @@ condition :
 	  e1=expr '!=' e2=expr # Unequal	
 	  | expr '==' expr # Compare
 	  | '!' c=condition #NotCondition
+	  | condition '<' condition #GreaterThen
 	  | condition 'and' condition #AndCondition
 	  | condition 'or' condition #OrCondition
 	  ;  

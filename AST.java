@@ -202,7 +202,7 @@ class AssignArray extends Command {
 
         int foo = idx.intValue();
         String arrayIndex = id + Integer.toString(foo);
-        System.out.println("assignArray: " + arrayIndex);
+        // System.out.println("assignArray: " + arrayIndex);
 
         Value v = action.eval(env);
         env.setVariable(arrayIndex, v);
@@ -510,4 +510,19 @@ class UnaryMinus extends Expr {
         }
         return v.javaType;
     }
+}
+
+class GreaterThen extends Condition {
+    Condition c1, c2;
+
+
+    GreaterThen(Condition c1, Condition c2)
+    {
+        this.c1 = c1;
+        this.c2 = c2;
+    }
+
+    // public Boolean eval(Environment env) {
+        
+    // }
 }
