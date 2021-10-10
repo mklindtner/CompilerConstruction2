@@ -34,13 +34,12 @@ public class main {
 		// and parse anything from the grammar for "start"
 		ParseTree parseTree = parser.start();
 		
-		//AstMaker astMaker = new AstMaker();
-		//AST ast=astMaker.visit(parseTree);
-
-		//System.out.println("Typecheck...\n" + ast.typecheck(new Environment()));
-		// ast.visit(parseTree);
-		Command p = (Command) new AstMaker().visit(parseTree);
+		AstMaker astMaker = new AstMaker();
+		Command p = (Command) new AstMaker().visit(parseTree);		
+		
+		System.out.println("Typecheck...\n" + p.typecheck(new Environment()));
 		p.eval(new Environment());
+
 	}
 }
 
@@ -199,8 +198,9 @@ class AstMaker extends AbstractParseTreeVisitor<AST> implements implVisitor<AST>
 
 	public AST visitGreaterThen(implParser.GreaterThenContext ctx) {
 		System.out.println("---visiting GreaterThen---");
-		Expr e1 = (Expr)visit(ctx.condition(0));
-		Expr e2 = (Expr)visit(ctx.condition(1));
+		
+		Expr e1 = (Expr)visit(ctx.expr(0));
+		Expr e2 = (Expr)visit(ctx.expr(1));
 
 		return new GreaterThen(e1,e2);
 	}

@@ -28,12 +28,16 @@ for(i=2..n){
 }
 
 for(i=2..n){
-    if(a[i]==1){
-        j=2*i;
-        while(j<n){
-            j=j+1;
-        }
+  if(a[i]==1){
+    output i;
+    j=2*i;
+    while(j<n){
+      a[j]=0;
+      j=j+i;
     }
+  } else {
+    
+  }
 }
 
 

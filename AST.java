@@ -155,7 +155,7 @@ class Sequence extends Command {
 
     public JavaType typecheck(Environment env) {
         c1.typecheck(env);
-        c2.typecheck(env);
+        c2.typecheck(env);        
         return JavaType.BOOLTYPE; // this is fucked
     }
 }
@@ -513,16 +513,31 @@ class UnaryMinus extends Expr {
 }
 
 class GreaterThen extends Condition {
-    Condition c1, c2;
+    Expr c1, c2;
 
 
-    GreaterThen(Condition c1, Condition c2)
+    GreaterThen(Expr c1, Expr c2)
     {
         this.c1 = c1;
         this.c2 = c2;
     }
 
-    // public Boolean eval(Environment env) {
-        
-    // }
+    public Boolean eval(Environment env) {
+        Value v1 = c1.eval(env);
+        Value v2 = c2.eval(env);
+        return v1.d < v2.d;
+    }
+
+    public JavaType typecheck(Environment env)
+    {
+        Value v1 = c1.eval(env);
+        Value v2 = c2.eval(env);
+        if(v1.javaType != v2.javaType)
+        {
+            faux.error("GreaterThen must have same types");
+            return null;    
+        }
+        return v1.javaType;
+    }
+
 }
