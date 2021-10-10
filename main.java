@@ -112,9 +112,7 @@ class AstMaker extends AbstractParseTreeVisitor<AST> implements implVisitor<AST>
 		String id = ctx.x.getText();
 		Expr accessor = (Expr) visit(ctx.i);
 		Expr action = (Expr) visit(ctx.v);
-		// Double value = Double.parseDouble(ctx.v.getText());
 		System.out.println("ID: " + id);
-		// System.out.println("accessor: " + accessor);
 		System.out.println("value:" + action);
 
 		return new AssignArray(id, accessor, action);
