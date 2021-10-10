@@ -1,0 +1,6 @@
+*.class
+*.interp
+*.tokens
+.vscode
+Environment.java
+impl*.java
