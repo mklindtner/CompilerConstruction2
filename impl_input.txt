@@ -10,13 +10,13 @@ c=0;
 //! if c==0 then c=1;
 //if b==0 and n==4 or n==5 then c=1;
 //if b==1 or n==5 then c=2;
-i=0;
-a[i+1] = 2;
+//i=0;
+//a[i+1] = 2;
 
 //for (i=1..n) a[i] = i;
+n[1] = 5;
 
-
-output a[i+1];
+//output a[i+1];
 //output n;
 //output z;
 //output c;

@@ -5,7 +5,7 @@ grammar impl;
 start   :  cs+=command* EOF ;
 
 program : c=command                      # SingleCommand
-	| '{' cs+=command* '}'           # MultipleCommands
+	| '{' cs+=command* '}'           	 # MultipleCommands
 	;
 	
 command : x=ID '=' e=expr ';'	           # Assignment
@@ -21,7 +21,7 @@ command : x=ID '=' e=expr ';'	           # Assignment
 expr	: 
 	expr OP=(MULT|DIV) expr 	# MultDiv
 	| expr OP=(ADD|MINUS) expr 	# AddSub
-	| x=ID'['i=expr']'	# IDArray
+	| x=ID'['i=expr']'			# IDArray
 	| c=FLOAT     	      		# Constant
 	| x=ID		      			# Variable
 	| '(' e=expr ')'      		# Parenthesis	

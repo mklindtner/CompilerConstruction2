@@ -1,21 +1,34 @@
 public abstract class AST {
+    abstract public JavaType typecheck(Environment env);
 };
 
 abstract class Expr extends AST {
     abstract public Value eval(Environment env);
+    // abstract public JavaType typecheck(Environment env);
 }
 
 abstract class Condition extends AST {
     abstract public Boolean eval(Environment env);
+    // abstract public JavaType typecheck(Environment env);
 }
 
 abstract class Command extends AST {
     abstract public void eval(Environment env);
+    // abstract public JavaType typecheck(Environment env);
 }
 
 enum JavaType {
     DOUBLETYPE, BOOLTYPE
 }
+
+class faux { // collection of non-OO auxiliary functions (currently just error)
+    public static void error(String msg) {
+        System.err.println("Interpreter error: " + msg);
+        System.exit(-1);
+    }
+}
+
+
 
 class Value {
     public JavaType javaType;
@@ -55,10 +68,20 @@ class MultDiv extends Expr {
         Value v2 = e2.eval(env);
         if (op.equals("*")) {
             // System.out.println("inside multiply");
-      
+
             return new Value(v1.d * v2.d);
         }
         return new Value(v1.d / v2.d);
+    }
+
+    public JavaType typecheck(Environment env) {
+        JavaType t1 = e1.typecheck(env);
+        JavaType t2 = e2.typecheck(env);
+        if (t1 != JavaType.DOUBLETYPE || t2 != JavaType.DOUBLETYPE) {
+            faux.error("Multiply must have DoubleType");
+            return null;
+        }
+        return JavaType.DOUBLETYPE;
     }
 }
 
@@ -80,6 +103,16 @@ class AddSub extends Expr {
         }
         return new Value(v1.d - v2.d);
     }
+
+    public JavaType typecheck(Environment env) {
+        JavaType t1 = e1.typecheck(env);
+        JavaType t2 = e2.typecheck(env);
+        if (t1 != JavaType.DOUBLETYPE || t2 != JavaType.DOUBLETYPE) {
+            faux.error("Multiply must have DoubleType");
+            return null;
+        }
+        return JavaType.DOUBLETYPE;
+    }
 }
 
 class Constant extends Expr {
@@ -92,13 +125,21 @@ class Constant extends Expr {
     public Value eval(Environment env) {
         return new Value(d);
     }
-}
 
+    public JavaType typecheck(Environment env) {
+        Value v = this.eval(env);
+        return v.javaType;
+    }
+}
 
 // Do nothing command
 class NOP extends Command {
     public void eval(Environment env) {
     };
+
+    public JavaType typecheck(Environment env) {
+        return null;
+    }
 }
 
 class Sequence extends Command {
@@ -112,6 +153,11 @@ class Sequence extends Command {
     public void eval(Environment env) {
         c1.eval(env);
         c2.eval(env);
+    }
+    public JavaType typecheck(Environment env) {
+        c1.typecheck(env);
+        c2.typecheck(env);
+        return JavaType.BOOLTYPE; //this is fucked
     }
 }
 
@@ -128,59 +174,85 @@ class Assignment extends Command {
         Value d = e.eval(env);
         env.setVariable(v, d);
     }
+
+    public JavaType typecheck(Environment env) {
+        System.out.println("---Typecheck assignment---");
+        return null;
+    }
 }
 
 class AssignArray extends Command {
     String id;
-    Expr accessor ;
+    Expr accessor;
     Expr action;
 
-    AssignArray(String id, Expr accessor, Expr action)
-    {
+    AssignArray(String id, Expr accessor, Expr action) {
         this.id = id;
         this.accessor = accessor;
         this.action = action;
     }
 
     /*
-        d is an array
-        envTable:
-
-            d0 | 1 
-            d1 | 9
-    */
+     * d is an array envTable:
+     * 
+     * d0 | 1 d1 | 9
+     */
     public void eval(Environment env) {
         Value v2 = accessor.eval(env);
         Double idx = v2.d;
-      
 
         int foo = idx.intValue();
-        String arrayIndex = id+Integer.toString(foo);
-        System.out.println("assignArray: "+arrayIndex);
+        String arrayIndex = id + Integer.toString(foo);
+        System.out.println("assignArray: " + arrayIndex);
 
         Value v = action.eval(env);
         env.setVariable(arrayIndex, v);
     }
 
+    public JavaType typecheck(Environment env) {
+        System.out.println("---Typecheck arrayAssignment---");
+
+        Value accesor_value = accessor.eval(env);
+        Value action_value = action.eval(env);
+        Double idx = accesor_value.d;
+        
+        int foo = idx.intValue();
+        String arrayIndex = id + Integer.toString(foo);
+        JavaType arrayType = env.getVariable(arrayIndex).javaType;
+        if (arrayType != action_value.javaType)
+        {
+            faux.error("ArrayType is not equal to assignment Type");
+            return null;
+        }
+        return action_value.javaType;        
+    }
 }
 
 class IDArray extends Expr {
     String id;
     Expr accessor;
 
-    IDArray(String id, Expr accessor)
-    {
+    IDArray(String id, Expr accessor) {
         this.id = id;
         this.accessor = accessor;
     }
 
     public Value eval(Environment env) {
-        Double idx = accessor.eval(env).d;        
+        Double idx = accessor.eval(env).d;
         int foo = idx.intValue();
-        String arrayIndex = id+Integer.toString(foo);        
+        String arrayIndex = id + Integer.toString(foo);
         return env.getVariable(arrayIndex);
     }
 
+    public JavaType typecheck(Environment env) {
+        System.out.println("---Typecheck IDArray---");
+        Value v = accessor.eval(env);
+        if(v.javaType.equals(JavaType.DOUBLETYPE)){
+            faux.error("access type must be double");
+            return null;
+        }
+        return v.javaType;
+    }
 }
 
 class Output extends Command {
@@ -191,8 +263,13 @@ class Output extends Command {
     }
 
     public void eval(Environment env) {
-        Value v = e.eval(env);        
+        Value v = e.eval(env);
         System.out.println(v);
+    }
+
+    public JavaType typecheck(Environment env) {
+        System.out.println("---Typecheck Output---");
+        return null;
     }
 }
 
@@ -209,10 +286,12 @@ class While extends Command {
         while (c.eval(env))
             body.eval(env);
     }
+
+    public JavaType typecheck(Environment env) {
+        System.out.println("---Typecheck while---");
+        return null;
+    }
 }
-
-
-
 
 class Unequal extends Condition {
     Expr e1, e2;
@@ -226,10 +305,20 @@ class Unequal extends Condition {
         return !e1.eval(env).equals(e2.eval(env));
     }
 
+    public JavaType typecheck(Environment env) {
+        System.out.println("---Typecheck Unequal---");
+        JavaType t1 = e1.eval(env).javaType;
+        JavaType t2 = e2.eval(env).javaType;
+        if(t1 != t2)
+        {
+            faux.error("Expressions must be of same type");
+        }
+        return t1;
+    }
 }
 
 class IfThen extends Command {
-    Command e1; 
+    Command e1;
     Condition cond;
 
     IfThen(Condition cond, Command e1) {
@@ -240,15 +329,19 @@ class IfThen extends Command {
     public void eval(Environment env) {
         System.out.println("inside IfThen");
         Boolean val = cond.eval(env);
-        System.out.println("val:"+val);
-        if(val)
-        {
+        System.out.println("val:" + val);
+        if (val) {
             e1.eval(env);
-        } 
+        }
+    }
+
+    public JavaType typecheck(Environment env) {
+        System.out.println("---Typecheck ifThen---");
+        return null;
     }
 }
 
-//this is '=='
+// this is '=='
 class Compare extends Condition {
     Expr e1, e2;
 
@@ -259,22 +352,18 @@ class Compare extends Condition {
 
     public Boolean eval(Environment env) {
         Value v1 = e1.eval(env);
-        Value v2 = e2.eval(env); 
-        System.out.println("v1: "+v1+"\tv2:"+v2);
-        System.out.println("v1 type:"+v1.javaType+"\tv2 type:"+v2.javaType);
+        Value v2 = e2.eval(env);
+        System.out.println("v1: " + v1 + "\tv2:" + v2);
+        System.out.println("v1 type:" + v1.javaType + "\tv2 type:" + v2.javaType);
 
-        if(v1.javaType == JavaType.DOUBLETYPE && v2.javaType == JavaType.DOUBLETYPE)
-        {
-            if(v1.d.equals(v2.d)) 
-            {
+        if (v1.javaType == JavaType.DOUBLETYPE && v2.javaType == JavaType.DOUBLETYPE) {
+            if (v1.d.equals(v2.d)) {
                 return true;
             }
             return false;
         }
-        if(v1.javaType == JavaType.BOOLTYPE && v2.javaType == JavaType.BOOLTYPE)
-        {
-            if(v1.b.equals(v2.b)) 
-            {
+        if (v1.javaType == JavaType.BOOLTYPE && v2.javaType == JavaType.BOOLTYPE) {
+            if (v1.b.equals(v2.b)) {
                 return true;
             }
             return false;
@@ -282,8 +371,17 @@ class Compare extends Condition {
 
         return null;
     }
+    public JavaType typecheck(Environment env) {
+        System.out.println("---Typecheck compare---");
+        JavaType t1 = e1.eval(env).javaType;
+        JavaType t2 = e2.eval(env).javaType;
+        if(t1 != t2)
+        {
+            faux.error("Expressions must be of same type");
+        }
+        return t1;        
+    }
 }
-
 
 class Variable extends Expr {
     String varname;
@@ -295,70 +393,105 @@ class Variable extends Expr {
     public Value eval(Environment env) {
         return env.getVariable(varname);
     }
-}
 
+    public JavaType typecheck(Environment env) {
+        System.out.println("---Typecheck variable---");
+        return this.eval(env).javaType;        
+    }
+
+}
 
 class ForLoop extends Command {
     String id;
     Double idx;
-    Expr end;    
+    Expr end;
     Command body;
-    ForLoop(String id, Double idx, Expr end,Command body) {
+
+    ForLoop(String id, Double idx, Expr end, Command body) {
         this.id = id;
         this.idx = idx;
         this.end = end;
         this.body = body;
     }
 
-    public void eval(Environment env) {        
+    public void eval(Environment env) {
         Value v = end.eval(env);
-        for(double i = idx; i < v.d; i++)
-        {
+        for (double i = idx; i < v.d; i++) {
             env.setVariable(id, new Value(i));
             body.eval(env);
         }
     }
-}
 
+    public JavaType typecheck(Environment env) {
+        System.out.println("---Typecheck forLoop---");
+        return null;
+    }
+}
 
 class AndCondition extends Condition {
     Condition e1, e2;
-    AndCondition(Condition e1, Condition e2)
-    {
+
+    AndCondition(Condition e1, Condition e2) {
         this.e1 = e1;
         this.e2 = e2;
     }
-    public Boolean eval(Environment env)
-    {
+
+    public Boolean eval(Environment env) {
         return e1.eval(env).equals(e2.eval(env));
+    }
+
+    public JavaType typecheck(Environment env)
+    {
+        System.out.println("---Typecheck andCondition---");
+        Value v1 = new Value(e1.eval(env));
+        Value v2 = new Value(e2.eval(env));
+        if(v1.javaType != v2.javaType)
+        {
+            faux.error("AndCondition must have similar types");
+        }
+        return v1.javaType;       
     }
 }
 
 class OrCondition extends Condition {
     Condition c1, c2;
 
-    OrCondition(Condition c1, Condition c2)
-    {
+    OrCondition(Condition c1, Condition c2) {
         this.c1 = c1;
         this.c2 = c2;
     }
 
-    public Boolean eval(Environment env)
-    {
+    public Boolean eval(Environment env) {
         return c1.eval(env) || (c2.eval(env));
+    }
+
+    public JavaType typecheck(Environment env)
+    {
+        System.out.println("---Typecheck orCondition---");
+        Value v1 = new Value(c1.eval(env));
+        Value v2 = new Value(c2.eval(env));
+        if(v1.javaType != v2.javaType)
+        {
+            faux.error("AndCondition must have similar types");
+        }
+        return v1.javaType;       
     }
 }
 
 class NotCondition extends Condition {
     Condition c1;
 
-    NotCondition(Condition c1)
-    {
+    NotCondition(Condition c1) {
         this.c1 = c1;
     }
 
-    public Boolean eval(Environment env)
-    {
+    public Boolean eval(Environment env) {
         return !c1.eval(env);
+    }
+
+    public JavaType typecheck(Environment env)
+    {
+        System.out.println("---Typecheck NotCondition---");
+        return new Value(c1.eval(env)).javaType;       
     }
 }

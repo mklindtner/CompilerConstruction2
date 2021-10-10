@@ -33,7 +33,11 @@ public class main {
 
 		// and parse anything from the grammar for "start"
 		ParseTree parseTree = parser.start();
+		
+		AstMaker astMaker = new AstMaker();
+		AST ast=astMaker.visit(parseTree);
 
+		System.out.println("Typecheck...\n" + ast.typecheck(new Environment()));
 		// Construct an interpreter and run it on the parse tree
 		// Interpreter interpreter = new Interpreter();
 		Command p = (Command) new AstMaker().visit(parseTree);
