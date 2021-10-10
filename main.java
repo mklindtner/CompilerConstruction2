@@ -110,11 +110,11 @@ class AstMaker extends AbstractParseTreeVisitor<AST> implements implVisitor<AST>
 
 	public AST visitAssignArray(implParser.AssignArrayContext ctx) {
 		String id = ctx.x.getText();
-		String accessor = ctx.i.getText();
+		Expr accessor = (Expr) visit(ctx.i);
 		Expr action = (Expr) visit(ctx.v);
 		// Double value = Double.parseDouble(ctx.v.getText());
 		System.out.println("ID: " + id);
-		System.out.println("accessor: " + accessor);
+		// System.out.println("accessor: " + accessor);
 		System.out.println("value:" + action);
 
 		return new AssignArray(id, accessor, action);
@@ -123,7 +123,8 @@ class AstMaker extends AbstractParseTreeVisitor<AST> implements implVisitor<AST>
 	public AST visitIDArray(implParser.IDArrayContext ctx) {
 		System.out.println("-----Called visitArray-----");
 		String id = ctx.x.getText();
-		String accessor = ctx.i.getText();
+		Expr accessor = (Expr) visit(ctx.i);
+		// String accessor = ctx.i.getText();
 		System.out.println("ID: " + id);
 		System.out.println("accessor: " + accessor);
 		return new IDArray(id, accessor);
@@ -158,10 +159,9 @@ class AstMaker extends AbstractParseTreeVisitor<AST> implements implVisitor<AST>
 
 		Double start = Double.parseDouble(ctx.n1.getText());
 		Expr end = (Expr) visit(ctx.n2);
-		// Double end = Double.parseDouble(ctx.n2.getText());
 		Command body = (Command) visit(ctx.p);
 
-		System.out.println("visitForLoop: " + start);
+		System.out.println("----visitForLoop:-----");
 		System.out.println("id: " + id);
 		System.out.println("text from n1: " + start);
 		System.out.println("text from n2: " + end);

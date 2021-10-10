@@ -12,7 +12,7 @@ command : x=ID '=' e=expr ';'	           # Assignment
 	| 'output' e=expr ';'            	   # Output
     | 'while' '('c=condition')' p=program  # WhileLoop
 	| 'if' c=condition 'then' p=program    #IfThen
-	| x=ID'['i=(ID|FLOAT)']''='v=expr ';'   #AssignArray		
+	| x=ID'['i=expr']''='v=expr ';'   	   #AssignArray		
 	| 'for' '('x=ID'='n1=FLOAT'..'n2=expr')' p=program  #ForLoop
 	; //a[1] = 2;
 
@@ -21,7 +21,7 @@ command : x=ID '=' e=expr ';'	           # Assignment
 expr	: 
 	expr OP=(MULT|DIV) expr 	# MultDiv
 	| expr OP=(ADD|MINUS) expr 	# AddSub
-	| x=ID'['i=(ID|FLOAT)']'	# IDArray
+	| x=ID'['i=expr']'	# IDArray
 	| c=FLOAT     	      		# Constant
 	| x=ID		      			# Variable
 	| '(' e=expr ')'      		# Parenthesis	

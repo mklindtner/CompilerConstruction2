@@ -16,7 +16,7 @@ a[i+1] = 2;
 //for (i=1..n) a[i] = i;
 
 
-output a[1];
+output a[i+1];
 //output n;
 //output z;
 //output c;

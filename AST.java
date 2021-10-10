@@ -132,10 +132,10 @@ class Assignment extends Command {
 
 class AssignArray extends Command {
     String id;
-    String accessor ;
+    Expr accessor ;
     Expr action;
 
-    AssignArray(String id, String accessor, Expr action)
+    AssignArray(String id, Expr accessor, Expr action)
     {
         this.id = id;
         this.accessor = accessor;
@@ -150,15 +150,9 @@ class AssignArray extends Command {
             d1 | 9
     */
     public void eval(Environment env) {
-        Double idx;
-        try 
-        {
-            idx = Double.parseDouble(accessor);
-        }catch(NumberFormatException e)
-        {
-            Value v = env.getVariable(accessor);
-            idx = v.d;
-        } 
+        Value v2 = accessor.eval(env);
+        Double idx = v2.d;
+      
 
         int foo = idx.intValue();
         String arrayIndex = id+Integer.toString(foo);
@@ -166,31 +160,22 @@ class AssignArray extends Command {
 
         Value v = action.eval(env);
         env.setVariable(arrayIndex, v);
-        // env.setVariable(arrayIndex, new Value(value));
     }
 
 }
 
 class IDArray extends Expr {
     String id;
-    String accessor;
+    Expr accessor;
 
-    IDArray(String id, String accessor)
+    IDArray(String id, Expr accessor)
     {
         this.id = id;
         this.accessor = accessor;
     }
 
     public Value eval(Environment env) {
-        Double idx;
-        try 
-        {
-            idx = Double.parseDouble(accessor);
-        }catch(NumberFormatException e)
-        {
-            Value v = env.getVariable(accessor);
-            idx = v.d;
-        } 
+        Double idx = accessor.eval(env).d;        
         int foo = idx.intValue();
         String arrayIndex = id+Integer.toString(foo);        
         return env.getVariable(arrayIndex);
