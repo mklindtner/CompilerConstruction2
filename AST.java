@@ -191,25 +191,18 @@ class AssignArray extends Command {
         this.action = action;
     }
 
-    /*
-     * d is an array envTable:
-     * 
-     * d0 | 1 d1 | 9
-     */
     public void eval(Environment env) {
         Value v2 = accessor.eval(env);
         Double idx = v2.d;
 
         int foo = idx.intValue();
         String arrayIndex = id + Integer.toString(foo);
-        // System.out.println("assignArray: " + arrayIndex);
 
         Value v = action.eval(env);
         env.setVariable(arrayIndex, v);
     }
 
     public JavaType typecheck(Environment env) {
-        System.out.println("---Typecheck arrayAssignment---");
 
         Value accesor_value = accessor.eval(env);
         Value action_value = action.eval(env);
@@ -218,10 +211,12 @@ class AssignArray extends Command {
         int foo = idx.intValue();
         String arrayIndex = id + Integer.toString(foo);
         JavaType arrayType = env.getVariable(arrayIndex).javaType;
+        
         if (arrayType != action_value.javaType) {
             faux.error("ArrayType is not equal to assignment Type");
             return null;
         }
+        
         return action_value.javaType;
     }
 }
@@ -324,16 +319,13 @@ class IfThen extends Command {
     }
 
     public void eval(Environment env) {
-        System.out.println("inside IfThen");
         Boolean val = cond.eval(env);
-        System.out.println("val:" + val);
         if (val) {
             e1.eval(env);
         }
     }
 
     public JavaType typecheck(Environment env) {
-        System.out.println("---Typecheck ifThen---");
         return null;
     }
 }

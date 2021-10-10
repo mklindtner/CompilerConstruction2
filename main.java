@@ -34,10 +34,9 @@ public class main {
 		// and parse anything from the grammar for "start"
 		ParseTree parseTree = parser.start();
 		
-		AstMaker astMaker = new AstMaker();
 		Command p = (Command) new AstMaker().visit(parseTree);		
 		
-		System.out.println("Typecheck...\n" + p.typecheck(new Environment()));
+		System.out.println("Typecheck...\n" + p.typecheck(new Environment())); //if typecheck fails, system.exit(1);
 		p.eval(new Environment());
 
 	}
@@ -114,8 +113,8 @@ class AstMaker extends AbstractParseTreeVisitor<AST> implements implVisitor<AST>
 		String id = ctx.x.getText();
 		Expr accessor = (Expr) visit(ctx.i);
 		Expr action = (Expr) visit(ctx.v);
-		System.out.println("ID: " + id);
-		System.out.println("value:" + action);
+		// System.out.println("ID: " + id);
+		// System.out.println("value:" + action);
 
 		return new AssignArray(id, accessor, action);
 	}
@@ -142,11 +141,11 @@ class AstMaker extends AbstractParseTreeVisitor<AST> implements implVisitor<AST>
 	}
 
 	public AST visitIfThen(implParser.IfThenContext ctx) {
-		System.out.println("----inside IfThen----");
+		// System.out.println("----inside IfThen----");
 		Condition c = (Condition) visit(ctx.c);
 		Command body = (Command) visit(ctx.p);
-		System.out.println("compare :" + c);
-		System.out.println("Command :" + body);
+		// System.out.println("compare :" + c);
+		// System.out.println("Command :" + body);
 		return new IfThen(c, body);
 	}
 
@@ -161,14 +160,13 @@ class AstMaker extends AbstractParseTreeVisitor<AST> implements implVisitor<AST>
 		Expr end = (Expr) visit(ctx.n2);
 		Command body = (Command) visit(ctx.p);
 
-		System.out.println("----visitForLoop:-----");
-		System.out.println("id: " + id);
-		System.out.println("text from n1: " + start);
-		System.out.println("text from n2: " + end);
-		System.out.println("text from body: " + body);
+		// System.out.println("----visitForLoop:-----");
+		// System.out.println("id: " + id);
+		// System.out.println("text from n1: " + start);
+		// System.out.println("text from n2: " + end);
+		// System.out.println("text from body: " + body);
 
 		return new ForLoop(id, start, end, body);
-		// return null;
 	}
 
 	public AST visitAndCondition(implParser.AndConditionContext ctx) {

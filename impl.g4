@@ -14,9 +14,7 @@ command : x=ID '=' e=expr ';'	           									# Assignment
 	| 'if' '('c=condition')' p=program ('else' p2=program )?    		#IfThen
 	| x=ID'['i=expr']''='v=expr ';'   	   									#AssignArray		
 	| 'for' '('x=ID'='n1=FLOAT'..'n2=expr')' p=program  					#ForLoop
-	; //a[1] = 2;
-
-
+	; 
 
 expr	: 
 	MINUS e=expr 				# UnaryMinus
@@ -39,6 +37,7 @@ condition :
 
 ID    : ALPHA (ALPHA|NUM)* ;
 FLOAT : NUM+ ('.' NUM+)? ;
+
 
 ALPHA : [a-zA-Z_ÆØÅæøå] ;
 NUM   : [0-9] ;

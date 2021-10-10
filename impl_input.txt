@@ -1,5 +1,4 @@
-/* Example program for the imperative language impl */
-
+/* Examples of programs that work*/
 //n=5;
 //result=4/2 - 3 * 2;
 //a=0;
@@ -14,12 +13,13 @@
 //a[i+1] = 2;
 
 //for (i=1..n) a[i] = i;
-//n[1] = 5;
+
 
 //output a[i+1];
 //output n;
 //output z;
 //output c;
+
 
 n=100;
 
@@ -35,9 +35,8 @@ for(i=2..n){
       a[j]=0;
       j=j+i;
     }
-  } else {
-    
   }
 }
+
 
 
