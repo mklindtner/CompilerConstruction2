@@ -1,33 +1,33 @@
-/* Example program for impl that tests many the features required in
+/* Example program for impl that tests many of the features required in
 the assignment */
 
 n=49;
 k=6;
 result=1;
 
-while(n!=k and k!=0){
+while(n!=1){
   result=result*n/k;
   n=n-1;
   k=k-1;
 }
 
-output result;
+// output result;
 
-n=100;
+// n=100;
 
-for(i=2..n){
-  a[i]=1;
-}
+// for(i=2..n){
+//   a[i]=1;
+// }
 
-for(i=2..n){
-  if(a[i]==1){
-    output i;
-    j=2*i;
-    while(j<n){
-      a[j]=0;
-      j=j+i;
-    }
-  }
-}
+// for(i=2..n){
+//   if(a[i]==1){
+//     output i;
+//     j=2*i;
+//     while(j<n){
+//       a[j]=0;
+//       j=j+i;
+//     }
+//   }
+// }
 
 

@@ -20,23 +20,15 @@
 //output z;
 //output c;
 
+n=5;
+result=1;
 
-n=100;
-
-for(i=2..n){
-  a[i]=1;
+while(n!=0){
+  result=result*n;
+  n=n+(-1);
 }
 
-for(i=2..n){
-  if(a[i]==1){
-    output i;
-    j=2*i;
-    while(j<n){
-      a[j]=0;
-      j=j+i;
-    }
-  }
-}
+output result;
 
 
 

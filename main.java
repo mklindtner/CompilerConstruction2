@@ -33,10 +33,10 @@ public class main {
 
 		// and parse anything from the grammar for "start"
 		ParseTree parseTree = parser.start();
-		
-		Command p = (Command) new AstMaker().visit(parseTree);		
-		
-		System.out.println("Typecheck...\n" + p.typecheck(new Environment())); //if typecheck fails, system.exit(1);
+
+		Command p = (Command) new AstMaker().visit(parseTree);
+
+		System.out.println("Typecheck...\n" + p.typecheck(new Environment())); // if typecheck fails, system.exit(1);
 		p.eval(new Environment());
 
 	}
@@ -77,7 +77,7 @@ class AstMaker extends AbstractParseTreeVisitor<AST> implements implVisitor<AST>
 
 	public AST visitMultDiv(implParser.MultDivContext ctx) {
 		String op = ctx.OP.getText();
-		System.out.println("op:" + op);
+		// System.out.println("op:" + op);
 		if (op.equals("*")) {
 			return new MultDiv((Expr) visit(ctx.expr(0)), (Expr) visit(ctx.expr(1)), op);
 		}
@@ -96,12 +96,6 @@ class AstMaker extends AbstractParseTreeVisitor<AST> implements implVisitor<AST>
 	public AST visitConstant(implParser.ConstantContext ctx) {
 		return new Constant(Double.parseDouble(ctx.c.getText()));
 	};
-
-	public AST visitUnequal(implParser.UnequalContext ctx) {
-		Expr v1 = (Expr) visit(ctx.e1);
-		Expr v2 = (Expr) visit(ctx.e2);
-		return new Unequal(v1, v2);
-	}
 
 	public AST visitAssignment(implParser.AssignmentContext ctx) {
 		String v = ctx.x.getText();
@@ -124,8 +118,8 @@ class AstMaker extends AbstractParseTreeVisitor<AST> implements implVisitor<AST>
 		String id = ctx.x.getText();
 		Expr accessor = (Expr) visit(ctx.i);
 		// String accessor = ctx.i.getText();
-		System.out.println("ID: " + id);
-		System.out.println("accessor: " + accessor);
+		// System.out.println("ID: " + id);
+		// System.out.println("accessor: " + accessor);
 		return new IDArray(id, accessor);
 	}
 
@@ -149,10 +143,6 @@ class AstMaker extends AbstractParseTreeVisitor<AST> implements implVisitor<AST>
 		return new IfThen(c, body);
 	}
 
-	public AST visitCompare(implParser.CompareContext ctx) {
-		return new Compare((Expr) visit(ctx.expr(0)), (Expr) visit(ctx.expr(1)));
-	}
-
 	public AST visitForLoop(implParser.ForLoopContext ctx) {
 		String id = ctx.x.getText();
 
@@ -169,37 +159,36 @@ class AstMaker extends AbstractParseTreeVisitor<AST> implements implVisitor<AST>
 		return new ForLoop(id, start, end, body);
 	}
 
-	public AST visitAndCondition(implParser.AndConditionContext ctx) {
+	public AST visitAnd(implParser.AndContext ctx) {
 		Condition e1 = (Condition) visit(ctx.condition(0));
 		Condition e2 = (Condition) visit(ctx.condition(1));
 
 		return new AndCondition(e1, e2);
 	}
 
-	public AST visitOrCondition(implParser.OrConditionContext ctx) {
+	public AST visitOr(implParser.OrContext ctx) {
 		Condition c1 = (Condition) visit(ctx.condition(0));
 		Condition c2 = (Condition) visit(ctx.condition(1));
 		return new OrCondition(c1, c2);
 	}
 
-	public AST visitNotCondition(implParser.NotConditionContext ctx) {
-		System.out.print("---visiting NotCondition----");
+	public AST visitNot(implParser.NotContext ctx) {
+		// System.out.print("---visiting NotCondition----");
 		Condition c1 = (Condition) visit(ctx.c);
 		return new NotCondition(c1);
 	}
 
-	public AST visitUnaryMinus(implParser.UnaryMinusContext ctx){
-		System.out.println("---visitng UnaryCondition---");		
-		Expr e1 = (Expr)visit(ctx.e);
-		return new UnaryMinus(e1);
-	}
+	// public AST visitUnaryMinus(implParser.UnaryMinusContext ctx){
+	// System.out.println("---visitng UnaryCondition---");
+	// Expr e1 = (Expr)visit(ctx.e);
+	// return new UnaryMinus(e1);
+	// }
 
-	public AST visitGreaterThen(implParser.GreaterThenContext ctx) {
-		System.out.println("---visiting GreaterThen---");
-		
-		Expr e1 = (Expr)visit(ctx.expr(0));
-		Expr e2 = (Expr)visit(ctx.expr(1));
+	public AST visitComparison(implParser.ComparisonContext ctx) {
+		Expr e1 = (Expr) visit(ctx.e1);
+		Expr e2 = (Expr) visit(ctx.e2);
+		String comp = ctx.c.getText();
 
-		return new GreaterThen(e1,e2);
+		return new Comparison(e1, e2, comp);
 	}
 }

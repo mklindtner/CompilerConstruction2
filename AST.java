@@ -7,7 +7,7 @@ abstract class Expr extends AST {
     // abstract public JavaType typecheck(Environment env);
 }
 
-abstract class Condition extends AST {
+abstract class Conditions extends AST {
     abstract public Boolean eval(Environment env);
     // abstract public JavaType typecheck(Environment env);
 }
@@ -155,7 +155,7 @@ class Sequence extends Command {
 
     public JavaType typecheck(Environment env) {
         c1.typecheck(env);
-        c2.typecheck(env);        
+        c2.typecheck(env);
         return JavaType.BOOLTYPE; // this is fucked
     }
 }
@@ -211,12 +211,12 @@ class AssignArray extends Command {
         int foo = idx.intValue();
         String arrayIndex = id + Integer.toString(foo);
         JavaType arrayType = env.getVariable(arrayIndex).javaType;
-        
+
         if (arrayType != action_value.javaType) {
             faux.error("ArrayType is not equal to assignment Type");
             return null;
         }
-        
+
         return action_value.javaType;
     }
 }
@@ -483,8 +483,7 @@ class NotCondition extends Condition {
 class UnaryMinus extends Expr {
     Expr e;
 
-    UnaryMinus(Expr e)
-    {
+    UnaryMinus(Expr e) {
         this.e = e;
     }
 
@@ -496,38 +495,49 @@ class UnaryMinus extends Expr {
 
     public JavaType typecheck(Environment env) {
         Value v = e.eval(env);
-        if(v.javaType != JavaType.DOUBLETYPE)
-        {
+        if (v.javaType != JavaType.DOUBLETYPE) {
             faux.error("Unary expr must have minus");
         }
         return v.javaType;
     }
 }
 
-class GreaterThen extends Condition {
-    Expr c1, c2;
+class Comparison extends Conditions {
+    Expr e1, e2;
+    String comparison;
 
-
-    GreaterThen(Expr c1, Expr c2)
-    {
-        this.c1 = c1;
-        this.c2 = c2;
+    Comparison(Expr e1, Expr e2, String comparison) {
+        this.e1 = e1;
+        this.e2 = e2;
+        this.comparison = comparison;
     }
 
     public Boolean eval(Environment env) {
-        Value v1 = c1.eval(env);
-        Value v2 = c2.eval(env);
-        return v1.d < v2.d;
+        switch (comparison) {
+            case "==":
+                return e1.eval(env).equals(e2.eval(env));
+            case "!=":
+                return !e1.eval(env).equals(e2.eval(env));
+            case ">=":
+                return e1.eval(env) >= (e2.eval(env));
+            case "<=":
+                return e1.eval(env).doubleValue() <= (e2.eval(env)).doubleValue();
+            case ">":
+                return e1.eval(env) > e2.eval(env);
+            case "<":
+                return e1.eval(env).doubleValue() < (e2.eval(env)).doubleValue();
+            default:
+                return false;
+        }
     }
 
-    public JavaType typecheck(Environment env)
-    {
+
+    public JavaType typecheck(Environment env) {
         Value v1 = c1.eval(env);
         Value v2 = c2.eval(env);
-        if(v1.javaType != v2.javaType)
-        {
+        if (v1.javaType != v2.javaType) {
             faux.error("GreaterThen must have same types");
-            return null;    
+            return null;
         }
         return v1.javaType;
     }

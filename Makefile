@@ -16,6 +16,9 @@ implParser.java:	impl.g4
 test:	main.class
 	java main impl_input.txt
 
+test1: main.class
+	java main impl_additional.txt
+
 tree:	$(GENERATED) impl.g4
 	javac $(GENERATED)
 	$(grun) impl start -tree -gui < impl_input.txt
