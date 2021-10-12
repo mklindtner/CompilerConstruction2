@@ -4,17 +4,14 @@ public abstract class AST {
 
 abstract class Expr extends AST {
     abstract public Value eval(Environment env);
-    // abstract public JavaType typecheck(Environment env);
 }
 
-abstract class Conditions extends AST {
+abstract class Condition extends AST {
     abstract public Boolean eval(Environment env);
-    // abstract public JavaType typecheck(Environment env);
 }
 
 abstract class Command extends AST {
     abstract public void eval(Environment env);
-    // abstract public JavaType typecheck(Environment env);
 }
 
 enum JavaType {
@@ -502,7 +499,7 @@ class UnaryMinus extends Expr {
     }
 }
 
-class Comparison extends Conditions {
+class Comparison extends Condition {
     Expr e1, e2;
     String comparison;
 
@@ -533,7 +530,6 @@ class Comparison extends Conditions {
                 return false;
         }
     }
-
 
     public JavaType typecheck(Environment env) {
         Value v1 = e1.eval(env);

@@ -7,7 +7,10 @@
 //if b!=1 then b=1; //unequals
 //c=0;
 //! if c==0 then c=1;
-//if b==0 and n==4 or n==5 then c=1;
+b = 34;
+n = 4;
+if (b!=0 and n==4 or n==5) c=1;
+output c;
 //if b==1 or n==5 then c=2;
 //i=0;
 //a[i+1] = 2;
@@ -20,15 +23,15 @@
 //output z;
 //output c;
 
-n=5;
-result=1;
+//n=5;
+//result=1;
 
-while(n!=0){
-  result=result*n;
-  n=n+(-1);
-}
+//while(n!=0){
+//  result=result*n;
+//  n=n-1;
+//}
 
-output result;
+//output result;
 
 
 

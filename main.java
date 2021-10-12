@@ -84,7 +84,6 @@ class AstMaker extends AbstractParseTreeVisitor<AST> implements implVisitor<AST>
 		return new MultDiv((Expr) visit(ctx.expr(0)), (Expr) visit(ctx.expr(1)), "/");
 	}
 
-	// husk mellemrum trololo
 	public AST visitAddSub(implParser.AddSubContext ctx) {
 		String op = ctx.OP.getText();
 		if (op.equals("+")) {
@@ -173,16 +172,14 @@ class AstMaker extends AbstractParseTreeVisitor<AST> implements implVisitor<AST>
 	}
 
 	public AST visitNot(implParser.NotContext ctx) {
-		// System.out.print("---visiting NotCondition----");
 		Condition c1 = (Condition) visit(ctx.c);
 		return new NotCondition(c1);
 	}
 
-	// public AST visitUnaryMinus(implParser.UnaryMinusContext ctx){
-	// System.out.println("---visitng UnaryCondition---");
-	// Expr e1 = (Expr)visit(ctx.e);
-	// return new UnaryMinus(e1);
-	// }
+	public AST visitUnaryMinus(implParser.UnaryMinusContext ctx) {
+		Expr e1 = (Expr) visit(ctx.e);
+		return new UnaryMinus(e1);
+	}
 
 	public AST visitCompare(implParser.CompareContext ctx) {
 		Expr e1 = (Expr) visit(ctx.e1);

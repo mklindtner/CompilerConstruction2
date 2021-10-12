@@ -19,7 +19,8 @@ command:
 	| 'for' '(' x = ID '=' n1 = FLOAT '..' n2 = expr ')' p = program	# ForLoop;
 
 expr:
-	expr OP = ('*' | '/') expr		# MultDiv
+	'-' e = expr					# UnaryMinus
+	| expr OP = ('*' | '/') expr	# MultDiv
 	| expr OP = ('+' | '-') expr	# AddSub
 	| x = ID '[' i = expr ']'		# IDArray
 	| c = FLOAT						# Constant
@@ -33,7 +34,7 @@ condition:
 	| condition 'or' condition			# Or;
 
 ID: ALPHA (ALPHA | NUM)*;
-FLOAT: '-'? NUM+ ('.' NUM+)?;
+FLOAT: NUM+ ('.' NUM+)?;
 COMPARISON: '==' | '>=' | '<=' | '>' | '<' | '!=';
 
 ALPHA: [a-zA-Z_ÆØÅæøå];
