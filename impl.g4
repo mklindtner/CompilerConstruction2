@@ -27,7 +27,7 @@ expr:
 	| '(' e = expr ')'				# Parenthesis;
 
 condition:
-	e1 = expr c = COMPARISON e2 = expr	# Unequal
+	e1 = expr c = COMPARISON e2 = expr	# Compare
 	| '!' c = condition					# Not
 	| condition 'and' condition			# And
 	| condition 'or' condition			# Or;

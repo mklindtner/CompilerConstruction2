@@ -184,7 +184,7 @@ class AstMaker extends AbstractParseTreeVisitor<AST> implements implVisitor<AST>
 	// return new UnaryMinus(e1);
 	// }
 
-	public AST visitComparison(implParser.ComparisonContext ctx) {
+	public AST visitCompare(implParser.CompareContext ctx) {
 		Expr e1 = (Expr) visit(ctx.e1);
 		Expr e2 = (Expr) visit(ctx.e2);
 		String comp = ctx.c.getText();

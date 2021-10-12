@@ -513,19 +513,22 @@ class Comparison extends Conditions {
     }
 
     public Boolean eval(Environment env) {
+        var v1 = e1.eval(env).d;
+        var v2 = e2.eval(env).d;
+
         switch (comparison) {
             case "==":
-                return e1.eval(env).equals(e2.eval(env));
+                return v1.equals(v2);
             case "!=":
-                return !e1.eval(env).equals(e2.eval(env));
+                return !v1.equals(v2);
             case ">=":
-                return e1.eval(env) >= (e2.eval(env));
+                return v1 >= v2;
             case "<=":
-                return e1.eval(env).doubleValue() <= (e2.eval(env)).doubleValue();
+                return v1 <= v2;
             case ">":
-                return e1.eval(env) > e2.eval(env);
+                return v1 > v2;
             case "<":
-                return e1.eval(env).doubleValue() < (e2.eval(env)).doubleValue();
+                return v1 < v2;
             default:
                 return false;
         }
@@ -533,8 +536,8 @@ class Comparison extends Conditions {
 
 
     public JavaType typecheck(Environment env) {
-        Value v1 = c1.eval(env);
-        Value v2 = c2.eval(env);
+        Value v1 = e1.eval(env);
+        Value v2 = e2.eval(env);
         if (v1.javaType != v2.javaType) {
             faux.error("GreaterThen must have same types");
             return null;
