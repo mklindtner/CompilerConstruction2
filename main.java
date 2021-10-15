@@ -86,9 +86,6 @@ class AstMaker extends AbstractParseTreeVisitor<AST> implements implVisitor<AST>
 
 	public AST visitAddSub(implParser.AddSubContext ctx) {
 		String op = ctx.OP.getText();
-		if (op.equals("+")) {
-			return new AddSub((Expr) visit(ctx.expr(0)), (Expr) visit(ctx.expr(1)), op);
-		}
 		return new AddSub((Expr) visit(ctx.expr(0)), (Expr) visit(ctx.expr(1)), op);
 	}
 
@@ -106,8 +103,6 @@ class AstMaker extends AbstractParseTreeVisitor<AST> implements implVisitor<AST>
 		String id = ctx.x.getText();
 		Expr accessor = (Expr) visit(ctx.i);
 		Expr action = (Expr) visit(ctx.v);
-		// System.out.println("ID: " + id);
-		// System.out.println("value:" + action);
 
 		return new AssignArray(id, accessor, action);
 	}
@@ -134,11 +129,12 @@ class AstMaker extends AbstractParseTreeVisitor<AST> implements implVisitor<AST>
 	}
 
 	public AST visitIfThen(implParser.IfThenContext ctx) {
-		// System.out.println("----inside IfThen----");
 		Condition c = (Condition) visit(ctx.c);
 		Command body = (Command) visit(ctx.p);
-		// System.out.println("compare :" + c);
-		// System.out.println("Command :" + body);
+		if (ctx.p2 != null) {
+			Command elseBody = (Command) visit(ctx.p2);
+			return new IfThen(c, body, elseBody);
+		}
 		return new IfThen(c, body);
 	}
 

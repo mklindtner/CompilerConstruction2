@@ -11,8 +11,6 @@ while(n!=k and k!=0){
   k=k-1;
 }
 
-output result;
-
 n=100;
 
 for(i=2..n){

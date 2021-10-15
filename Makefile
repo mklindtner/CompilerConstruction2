@@ -19,6 +19,9 @@ test:	main.class
 test1: main.class
 	java main impl_additional.txt
 
+test2: main.class
+	java main impl_test_cases.txt
+
 tree:	$(GENERATED) impl.g4
 	javac $(GENERATED)
 	$(grun) impl start -tree -gui < impl_input.txt

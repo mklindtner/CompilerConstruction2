@@ -1,37 +1,11 @@
-/* Examples of programs that work*/
-//n=5;
-//result=4/2 - 3 * 2;
-//a=0;
-//if n==5 then a=3; //equals
-//b=0;
-//if b!=1 then b=1; //unequals
-//c=0;
-//! if c==0 then c=1;
-b = 34;
-n = 4;
-if (b!=0 and n==4 or n==5) c=1;
-output c;
-//if b==1 or n==5 then c=2;
-//i=0;
-//a[i+1] = 2;
+/* Example program for the imperative language impl */
 
-//for (i=1..n) a[i] = i;
+n=5;
+result=1;
 
+while(n!=0){
+  result=result*n;
+  n=n+(-1);
+}
 
-//output a[i+1];
-//output n;
-//output z;
-//output c;
-
-//n=5;
-//result=1;
-
-//while(n!=0){
-//  result=result*n;
-//  n=n-1;
-//}
-
-//output result;
-
-
-
+output result;

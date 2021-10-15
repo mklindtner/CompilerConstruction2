@@ -15,7 +15,7 @@ command:
 	| 'if' '(' c = condition ')' p = program (
 		'else' p2 = program
 	)?																	# IfThen
-	| x = ID '[' i = expr ']' '=' v = expr ';'							# AssignArray
+	| x = ID '[' (i = expr | idx=NUM+)  ']' '=' v = expr ';'							# AssignArray
 	| 'for' '(' x = ID '=' n1 = FLOAT '..' n2 = expr ')' p = program	# ForLoop;
 
 expr:

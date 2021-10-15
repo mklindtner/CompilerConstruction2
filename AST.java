@@ -307,19 +307,27 @@ class Unequal extends Condition {
 }
 
 class IfThen extends Command {
-    Command e1;
+    Command body, elseBody;
     Condition cond;
 
-    IfThen(Condition cond, Command e1) {
+    IfThen(Condition cond, Command body) {
         this.cond = cond;
-        this.e1 = e1;
+        this.body = body;
+    }
+
+    IfThen(Condition cond, Command body, Command elseBody)
+    {
+        this.body = body;
+        this.elseBody = elseBody;
+        this.cond = cond;
     }
 
     public void eval(Environment env) {
         Boolean val = cond.eval(env);
-        if (val) {
-            e1.eval(env);
-        }
+        if (val)
+            body.eval(env);
+        else if(elseBody != null)
+            elseBody.eval(env);
     }
 
     public JavaType typecheck(Environment env) {
